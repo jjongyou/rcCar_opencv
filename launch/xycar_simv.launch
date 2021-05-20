@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+	<param name="robot_description" textfile ="$(find xycar_simul)/urdf/xycar.urdf" />
+	<param name="use_gui" value="true"/>
+	<!-- load map file -->
+	<arg name="map_file" default="$(find xycar_simul)/map/map.yaml"/>
+	<node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
+
+	<!-- rviz display -->
+	<node name="rviz_visualizer" pkg="rviz" type="rviz" required="true" 
+                                             args="-d $(find xycar_simul)/rviz/xycar_third.rviz"/>
+	<!--<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>-->
+	<!--<node pkg="uvc_camera" type="uvc_camera_node" name="uvc_camera" output="screen"/>-->
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+        <node name="my_driver" pkg="xycar_simul" type="my_driver.py" output="screen"/>
+        <node name="converter" pkg="xycar_simul" type="converter" />
+        <node name="odom" pkg="xycar_simul" type="odom" />
+	<node pkg="tf" type="static_transform_publisher" name="link_broadcaster" args="0 0 0 0 0 0 /map /odom 100" />
+
+</launch>
